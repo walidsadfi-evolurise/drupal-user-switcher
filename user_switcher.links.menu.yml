@@ -1,0 +1,9 @@
+user_switcher.switch_form:
+  title: 'Switch user'
+  description: 'Switch to another user account.'
+  route_name: user_switcher.form
+  parent: system.admin_people
+  weight: 100
+  menu_name: admin
+  requirements:
+    _permission: 'switch user accounts'

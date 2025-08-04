@@ -1,0 +1,35 @@
+user_switcher.form:
+  path: '/admin/people/user-switch'
+  defaults:
+    _form: '\Drupal\user_switcher\Form\UserSwitchForm'
+    _title: 'Switch user'
+  requirements:
+    _permission: 'switch user accounts'
+
+user_switcher.switch:
+  path: '/user-switch/{user}'
+  defaults:
+    _controller: '\Drupal\user_switcher\Controller\SwitchController::switch'
+  requirements:
+    _permission: 'switch user accounts'
+  options:
+    parameters:
+      user:
+        type: 'entity:user'
+
+user_switcher.restore:
+  path: '/user-switch/restore'
+  defaults:
+    _controller: '\Drupal\user_switcher\Controller\SwitchController::restore'
+  requirements:
+    _access: 'TRUE'
+
+
+user_switcher.autocomplete:
+  path: '/user-switch/autocomplete'
+  defaults:
+    _controller: '\Drupal\user_switcher\Controller\SwitchController::autocomplete'
+  requirements:
+    _permission: 'switch user accounts'
+  options:
+    _format: 'json'

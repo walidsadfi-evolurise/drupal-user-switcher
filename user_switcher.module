@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * @file
+ * User Switcher module file.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url; 
+
+/**
+ * Implements hook_help().
+ */
+function user_switcher_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.user_switcher':
+      return t('The User Switcher module allows users with the "Switch to another user" permission to temporarily assume another account and then seamlessly return to their own. A floating button appears on every page while impersonating, providing a quick way to restore the original session.');
+  }
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function user_switcher_entity_operation_alter(array &$operations, \Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'user') {
+    $account = \Drupal::currentUser();
+    if ($account->hasPermission('switch user accounts')) {
+      // Prevent switching to UID 1 unless already UID 1.
+      if ($entity->id() == 1 && $account->id() != 1) {
+        return;
+      }
+      $url = \Drupal\Core\Url::fromRoute('user_switcher.switch', ['user' => $entity->id()]);
+      $url->setOption('query', []);          // Clear query parameters
+      $operations['user_switcher_switch'] = [
+        'title' => t('Access this account'),
+        'url' => $url,
+        'weight' => 15,
+      ];
+    }
+  }
+}
+
+function user_switcher_page_bottom(array &$page) {
+  $session = \Drupal::request()->getSession();
+  if ($session && ($session->has('user_switcher_stack') || $session->has('user_switcher_original_uid'))) {
+    $url = \Drupal\Core\Url::fromRoute('user_switcher.restore')->toString();
+
+    $page['user_switcher_restore_button'] = [
+      '#type'       => 'html_tag',
+      '#tag'        => 'a',
+      '#value'      => t('Back to the original session'),
+      '#attributes' => [
+        'href'        => $url,
+        'class'       => ['user-switcher-restore-button'],
+        'style' => 'position:fixed; bottom:24px; right:24px; padding:10px 16px; background:#0074bd; color:#fff; font-weight:600; border-radius:30px; text-decoration:none; z-index:10000; cursor:pointer;',
+      ],
+    ];
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "drupal/user_switcher",
+  "description": "User Switcher module for Drupal 10/11.",
+  "type": "drupal-module",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": "^8.0",
+    "drupal/core-composer-scaffold": "^10.0 || ^11.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\user_switcher\\": "src/"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+name: User Switcher
+type: module
+description: Allows privileged users to switch to another user account and restore their original session.
+package: Administration
+core_version_requirement: '^10 || ^11'
+php: '8.0'
+dependencies: []
